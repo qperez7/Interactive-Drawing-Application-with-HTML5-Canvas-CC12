@@ -53,3 +53,13 @@ else {
     ctx.stroke();
     ctx.closePath();
 }}
+//Task 4: Add Color Selection and Canvas Clearing
+const clearButton = document.getElementById('clear')
+const colorSelector = document.getElementById("colorSelector");
+clearButton.addEventListener('click',() => {
+    canvas.value = '';
+});
+colorSelector.addEventListener("change", (event) => {
+    const selectedColor = event.target;
+    event.textContent = `$${selectedColor}`; // Note to self: This needs to be adjusted
+});
