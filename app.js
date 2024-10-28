@@ -2,8 +2,7 @@
 
 // Task 2: Configure the JavaScript for Drawing Context
 let Drawing = false;
-let x = 0;
-let y = 0;
+
 // Get the canvas element
 const canvas = document.getElementById('myCanvas');
 
@@ -12,44 +11,61 @@ const ctx = canvas.getContext('2d');
 
 // Add Mouse Movement Events
 
-canvas.addEventListener("mousedown", (event) => {
-    drawShape(ctx, x, y, event.clientX, event.clientY)
-    x = event.clientX;
-    y = event.clientY;
+canvas.addEventListener("mousedown", (e) => {
+    x = e.offsetX
+    y = e.offsetY
+    console.log('Mouse down at:', x, y);
     Drawing = true;
 });
-canvas.addEventListener("mouseup", (event) => {
-    drawShape(ctx, x, y, event.clientX, event.clientY)
-    x = event.clientX;
-    y = event.clientY;
-    Drawing = true;
+canvas.addEventListener("mouseup", () => {
+    Drawing = false;
+console.log('Mouse released');
 });
-canvas.addEventListener("mousemove", (event) => {
-    drawShape(ctx, x, y, event.clientX, event.clientY)
-    x = event.clientX;
-    y = event.clientY;
-    Drawing = true;
+canvas.addEventListener("mousemove", (e) => {
+if (!Drawing) return; 
+// Stop if the mouse is not pressed
+console.log('Mouse moving at:', e.offsetX, e.offsetY);
+drawShape(e.offsetX, e.offsetY)
 });
 // Task 3: Implement Shape Drawing Logic
-function drawShape(ctx, x1, y1, x2, y2) {
-    let toolOption = toolOption.querySelector("radio") // Need to properly reference radio tool <---
-    if(toolOption === Rectangle) {
-        ctx.strokeStyle = '#e74c3c';
+const rectangle = document.getElementById('rectangle');
+const circles = document.getElementById('circles');
+const lines = document.getElementById('lines');
+
+rectangle.addEventListener("click", () => {
+    drawingTool = 'rectangle';
+    Drawing = true;
+});
+circles.addEventListener("click", () => {
+    drawingTool = 'circles';
+    Drawing = true;
+});
+lines.addEventListener("click", () => {
+    drawingTool = 'lines';
+    Drawing = true;
+});
+function drawShape(x1,y1) {
+    const width = x1-x;
+    const height = y1-y;
+        if(drawingTool === 'rectangle') {
+        ctx.beginPath()
+        ctx.strokeStyle = color;
         ctx.lineWidth = 5;
-        ctx.strokeRect(250, 50, 150, 100);
+        ctx.strokeRect (x,y,width,height);
+        
 }
-else if (toolOption === Circles) {
+
+   if(drawingTool === 'circles') {
     ctx.beginPath();
-    ctx.arc(150, 300, 50, 0, 2 * Math.PI);  // Draw a full circle
-    ctx.fillStyle = '#f1c40f';
-    ctx.fill();  // Fill the circle
+    ctx.arc(x, y, 2, 0, Math.PI * 2);  // Draw a full circle
+    ctx.fill(color);  // Fill the circle
 }
-else {
+   if(drawingTool ==='lines') {
     ctx.beginPath();
-    //ctx.colorSelector(); // Need to properly reference color selector <---
+    ctx.strokeStyle = color;
     ctx.lineWidth = 1;
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
+    ctx.moveTo(x,y)
+    ctx.lineTo(x1,y1)
     ctx.stroke();
     ctx.closePath();
 }}
@@ -57,9 +73,8 @@ else {
 const clearButton = document.getElementById('clear')
 const colorSelector = document.getElementById("colorSelector");
 clearButton.addEventListener('click',() => {
-    canvas.value = '';
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 });
-colorSelector.addEventListener("change", (event) => {
-    const selectedColor = event.target;
-    event.textContent = `$${selectedColor}`; // Note to self: This needs to be adjusted
+const color = colorSelector.addEventListener("click", () => {
+    colorSelector.value
 });
